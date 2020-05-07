@@ -1,3 +1,8 @@
+# Point of this Project?
+The point is to use the results with a service like: Rocketreach.co and their extension https://rocketreach.co/ and their extension https://chrome.google.com/webstore/detail/rocketreach-chrome-extens/oiecklaabeielolbliiddlbokpfnmhba?hl=en-US
+
+The service basically allows you to use their extension to be on a Linkedin page and to grab their email from the Linkedin page. This sheet also allows you to quickly scan for recruiters that are relevant to you, whether university recruiter or so on.
+
 # Two ways to Run
 
 ## Make sure you did npm install if you are cloning this repo
@@ -35,3 +40,9 @@ https://medium.com/@jaredpotter1/connecting-puppeteer-to-existing-chrome-window-
 > const wsChromeEndpointurl = 'ws://127.0.0.1:9222/devtools/browser/fb14c430-a243-4fc0-9199-2c6a8e6d2f70';
 3. Log into Linkedin on that opened up Chrome Browser running in dev mode
 4. The program runs similarly to the method 1. Give it an array of companies you want to search for, an integer on how pages, and just run the command npm run security to let it run.
+
+## Note if you want to change the search term....
+
+> let searchTerm = `tech%20recruiter%20${company}`
+
+You can change the search term by going to the index.js or the loggedIn.js and changing the search term variable. Just ctrl + f to find it. I grabbed the search term template I wanted to use, by just searching in Linkedin, grabbing the URL parameter, and copying and pasting it there. But I'm sure anyone using this can figure out the pattern on if you wanted to search: 'tech recruiter ____' or 'some random term {insert company}'
