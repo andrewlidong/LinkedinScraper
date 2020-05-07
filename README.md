@@ -6,7 +6,7 @@
 ### index.js
 1. First put your credentials in the creds.json
 2. When you do npm start a browser will open up and log you in
-3. You can change the variable "amountOfSecondsToWait" in index.js to change the amount of seconds to wait: 
+3. You can change the variable "amountOfSecondsToWait" in index.js to change the amount of seconds to wait after it clicks the submit button: 
 > let amountOfSecondsToWait = 120
 4. This might be bc you need to solve the security clearance question / captchas
 5. You will know the time you set is too short if you are suddenly being redirected as solving captchas, since the program will assume that it is logged in. You can always just send an interrupt command through terminal in order to stop the program
