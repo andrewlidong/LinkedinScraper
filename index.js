@@ -1,0 +1,135 @@
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+const fastcsv = require('fast-csv');
+const creds = require('./creds.json')
+const { convertArrayToCSV } = require('convert-array-to-csv');
+
+const LINKEDIN = "https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin"
+let LOGIN_SUCCESS = true
+async function startBrowser(companyToSearch, numPages) {
+    const browser = await puppeteer.launch({
+        headless: false,
+        defaultViewport: null
+    });
+
+    //CREATING THE PAGE
+    const page = await browser.newPage();
+    await page.goto(LINKEDIN)
+    await page.waitFor(1000);
+    await page.type('[id=username]', creds.username);
+    await page.type('[id=password]', creds.password);
+    await page.waitFor(1000);
+    await page.click('[type=submit]');
+    // ============================
+    // TIMER FUNCTION
+    // MODIFY THIS TO GET MORE TIME TO MANUALLY CLEAR SECURITY
+    // CHECK IF YOU HAVE TO
+    // ===========================
+    let amountOfSecondsToWait = 10
+    await page.waitFor(1000 * amountOfSecondsToWait);
+
+    let combinedResults = []
+    for (company of companyToSearch) {
+        console.log("COMPANY: " + company)
+        let results = []
+        let currPage = 1
+        while (currPage <= numPages) {
+            await page.goto(createSearchURL(company, currPage))
+            await page.waitFor(1000);
+            await autoScroll(page)
+            let links = await page.evaluate(() => {
+                const links = document.querySelectorAll('.search-result__result-link');
+                const urls = Array.from(links).map(v => v.href);
+                return urls
+            });
+            const names = await page.evaluate(() => {
+                const names = document.querySelectorAll('.actor-name');
+                const urls = Array.from(names).map(v => v.innerHTML);
+                return urls
+            });
+
+            const titles = await page.evaluate(() => {
+                const names = document.querySelectorAll('.subline-level-1');
+                const urls = Array.from(names).map(v => v.innerText);
+                return urls
+            });
+
+            links = [...new Set(links)]
+            for (let i = 0; i < links.length; i++) {
+                tempObj = {
+                    company: company,
+                    name: names[i],
+                    title: titles[i],
+                    link: links[i],
+                }
+                results.push(tempObj)
+            }
+            currPage += 1
+        }
+        combinedResults = [...combinedResults, ...results]
+    }
+
+    return combinedResults
+}
+
+async function autoScroll(page) {
+    await page.evaluate(async () => {
+        await new Promise((resolve, reject) => {
+            var totalHeight = 0;
+            var distance = 100;
+            var timer = setInterval(() => {
+                var scrollHeight = document.body.scrollHeight;
+                window.scrollBy(0, distance);
+                totalHeight += distance;
+
+                if (totalHeight >= scrollHeight) {
+                    clearInterval(timer);
+                    resolve();
+                }
+            }, 100);
+        });
+    });
+}
+
+
+function createSearchURL(companySearch, pageToSearch) {
+    console.log("CREATING URL FROM: " + companySearch)
+    let company = companySearch
+    let pageCounter = pageToSearch
+    //CAN CHANGE SEARCH TERMS HERE
+    //REGULAR
+    let searchTerm = `tech%20recruiter%20${company}`
+    //UNIVERSITY
+    // let searchTerm = `university%20recruiter%20${company}`
+    let SEARCHURL = `https://www.linkedin.com/search/results/all/?keywords=${searchTerm}&origin=GLOBAL_SEARCH_HEADER&page=${pageCounter}`
+    return SEARCHURL
+
+}
+
+
+async function main() {
+    //CALLING FUNCTION
+    //INPUT:
+    //PARAM 1: LIST OF COMPANIES TO OSEARCH
+    //PARAM 2: HOW MANY PAGES DEEP TO SEARCH
+    let result = await startBrowser(
+        ["Google", "Apple", "Facebook", "Microsoft",
+            "Amazon", "Tesla", "Snapchat", "Linkedin", "Twitter", "Spotify",
+            "Hulu", "Two Sigma", "Instagram", "Uber", "Lyft", "Airbnb", "IBM",
+            "Intel", "HBO", "Oracle", "Samsung", "HP", "Sony", "Yelp", "AngelList",
+            "Verizon", "Boeing", "PayPal", "Reddit", "Qualcomm", "mozilla", "Dell",
+            "GE", "Slack", "Palantir", "Stripe", "SpaceX", "Airbnb", "Robinhood",
+            "Atlassian", "Epic Games", "DropBox", "Citadel", "Riot", "Intuit",
+            "Pinterest", "Bloomberg", "SurveyMonkey", "SalesForce", "Square",
+            "Twilio", "Lime", "Peloton", "Blizzard", "Venmo", "DoorDash", "JUUL",
+            "Ripple", "Akuna", "Front", "Blend", "Morgan Stanley", "JP Morgan",
+            "Goldman Sachs", "Prudential", "Fidelity", "Capital One", "Jane Street",
+            "Halliburton", "Visa", "AMEX", "Booze Allen Hamilton", "Cigna"], 2)
+    //WRITING DATA
+    const ws = fs.createWriteStream("recruiters.csv", { flag: 'a' });
+    fastcsv
+        .write(result, { headers: false })
+        .pipe(ws);
+}
+
+main()

@@ -1,0 +1,21 @@
+{
+  "name": "scottbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "convert-array-to-csv": "^1.0.11",
+    "csv-parser": "^2.3.2",
+    "csv-writer": "^1.6.0",
+    "fast-csv": "^4.1.3",
+    "neat-csv": "^5.2.0",
+    "puppeteer": "^3.0.3",
+    "unirest": "^0.6.0"
+  }
+}
