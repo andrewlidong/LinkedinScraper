@@ -2,7 +2,7 @@
 
 ## Make sure you did npm install if you are cloning this repo
 
-## Method one (Let Puppeteer Start Up a Chrome Browser and run for you) (npm run start):
+## Method one (Let Puppeteer Start Up a Chrome Browser and run for you) (npm start):
 ### index.js
 1. First put your credentials in the creds.json
 2. When you do npm start a browser will open up and log you in
