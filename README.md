@@ -46,3 +46,13 @@ https://medium.com/@jaredpotter1/connecting-puppeteer-to-existing-chrome-window-
 > let searchTerm = `tech%20recruiter%20${company}`
 
 You can change the search term by going to the index.js or the loggedIn.js and changing the search term variable. Just ctrl + f to find it. I grabbed the search term template I wanted to use, by just searching in Linkedin, grabbing the URL parameter, and copying and pasting it there. But I'm sure anyone using this can figure out the pattern on if you wanted to search: 'tech recruiter ____' or 'some random term {insert company}'
+
+Already have some defaults you can comment in and out:
+"
+    //REGULAR
+    let searchTerm = `tech%20recruiter%20${company}`
+    //UNIVERSITY
+    let searchTerm = `university%20recruiter%20${company}`
+"
+
+If you are using a term like university recruiter btw, I don't think you need to search beyond 1 page.
