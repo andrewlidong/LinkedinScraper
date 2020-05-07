@@ -2,30 +2,31 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const fastcsv = require('fast-csv');
 const creds = require('./creds.json')
-const { convertArrayToCSV } = require('convert-array-to-csv');
+/*
+MAC TERMINAL COMMAND TO QUICK START
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --no-first-run --no-default-browser-check --user-data-dir=$(mktemp -d -t 'chrome-remote_data_dir')
 
-const LINKEDIN = "https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin"
-let LOGIN_SUCCESS = true
+2) COPY THE ENDPOINT URL AND REPLACE THE wsChromeEndPointURL variable
+
+3) Log into linkedin
+*/
+
+const wsChromeEndpointurl = 'ws://127.0.0.1:9222/devtools/browser/fb14c430-a243-4fc0-9199-2c6a8e6d2f70';
+const LINKEDIN = "https://www.linkedin.com/feed/?trk=guest_homepage-basic_nav-header-signin"
+
 async function startBrowser(companyToSearch, numPages) {
-    const browser = await puppeteer.launch({
-        headless: false,
+    const browser = await puppeteer.connect({
+        browserWSEndpoint: wsChromeEndpointurl,
         defaultViewport: null
     });
-
-    //CREATING THE PAGE
     const page = await browser.newPage();
     await page.goto(LINKEDIN)
-    await page.waitFor(1000);
-    await page.type('[id=username]', creds.username);
-    await page.type('[id=password]', creds.password);
-    await page.waitFor(1000);
-    await page.click('[type=submit]');
     // ============================
     // TIMER FUNCTION
     // MODIFY THIS TO GET MORE TIME TO MANUALLY CLEAR SECURITY
     // CHECK IF YOU HAVE TO
     // ===========================
-    let amountOfSecondsToWait = 120
+    let amountOfSecondsToWait = 3
     await page.waitFor(1000 * amountOfSecondsToWait);
 
     let combinedResults = []
@@ -48,7 +49,7 @@ async function startBrowser(companyToSearch, numPages) {
                         title: resTitle,
                         link: resLink,
                     }
-                });
+                }, this);
                 return urls
             })
             for (let i = 0; i < links.length; i++) {
