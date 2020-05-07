@@ -33,4 +33,5 @@
 https://medium.com/@jaredpotter1/connecting-puppeteer-to-existing-chrome-window-8a10828149e0
 2. copy the endpoint link you get and replace the endpoint link in the file loggedIn.js with the new updated link:
 > const wsChromeEndpointurl = 'ws://127.0.0.1:9222/devtools/browser/fb14c430-a243-4fc0-9199-2c6a8e6d2f70';
-3. The program runs similarly to the method 1, and once you do npm run security, and you chose the companies you want and the amount of pages you will be good :) 
+3. Log into Linkedin on that opened up Chrome Browser running in dev mode
+4. The program runs similarly to the method 1. Give it an array of companies you want to search for, an integer on how pages, and just run the command npm run security to let it run.
