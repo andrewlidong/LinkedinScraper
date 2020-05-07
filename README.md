@@ -50,8 +50,11 @@ You can change the search term by going to the index.js or the loggedIn.js and c
 Already have some defaults you can comment in and out:
 
 >REGULAR
+
 >let searchTerm = `tech%20recruiter%20${company}`
+
 >UNIVERSITY
+
 >let searchTerm = `university%20recruiter%20${company}`
 
 
